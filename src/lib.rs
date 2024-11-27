@@ -14,6 +14,8 @@ mod str;
 // We purposely place this here for documentation ordering
 mod arithmetic_impls;
 
+mod arithmetic_ext;
+
 #[cfg(feature = "rust-fuzz")]
 mod fuzz;
 #[cfg(feature = "maths")]
