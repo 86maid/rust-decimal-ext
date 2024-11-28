@@ -1,6 +1,7 @@
 use crate::Decimal;
 use crate::Error;
 use overload::overload;
+use std::cmp::Ordering;
 use std::ops;
 
 #[rustfmt::skip]
@@ -68,6 +69,12 @@ macro_rules! impl_decimal_eq {
     };
 }
 
+impl PartialEq<str> for Decimal {
+    fn eq(&self, other: &str) -> bool {
+        *self == Decimal::try_from(other).unwrap()
+    }
+}
+
 impl PartialEq<&str> for Decimal {
     fn eq(&self, other: &&str) -> bool {
         *self == Decimal::try_from(*other).unwrap()
@@ -100,3 +107,52 @@ impl_decimal_eq!(u64);
 impl_decimal_eq!(u128);
 impl_decimal_eq!(f32);
 impl_decimal_eq!(f64);
+
+macro_rules! impl_decimal_ord {
+    ($type:ty) => {
+        impl PartialOrd<$type> for Decimal {
+            fn partial_cmp(&self, other: &$type) -> Option<Ordering> {
+                self.partial_cmp(&Decimal::try_from(*other).unwrap())
+            }
+        }
+    };
+}
+
+impl PartialOrd<str> for Decimal {
+    fn partial_cmp(&self, other: &str) -> Option<core::cmp::Ordering> {
+        self.partial_cmp(&Decimal::try_from(other).unwrap())
+    }
+}
+
+impl PartialOrd<&str> for Decimal {
+    fn partial_cmp(&self, other: &&str) -> Option<core::cmp::Ordering> {
+        self.partial_cmp(&Decimal::try_from(*other).unwrap())
+    }
+}
+
+impl PartialOrd<String> for Decimal {
+    fn partial_cmp(&self, other: &String) -> Option<core::cmp::Ordering> {
+        self.partial_cmp(&Decimal::try_from(other).unwrap())
+    }
+}
+
+impl PartialOrd<&String> for Decimal {
+    fn partial_cmp(&self, other: &&String) -> Option<core::cmp::Ordering> {
+        self.partial_cmp(&Decimal::try_from(*other).unwrap())
+    }
+}
+
+impl_decimal_ord!(isize);
+impl_decimal_ord!(i8);
+impl_decimal_ord!(i16);
+impl_decimal_ord!(i32);
+impl_decimal_ord!(i64);
+impl_decimal_ord!(i128);
+impl_decimal_ord!(usize);
+impl_decimal_ord!(u8);
+impl_decimal_ord!(u16);
+impl_decimal_ord!(u32);
+impl_decimal_ord!(u64);
+impl_decimal_ord!(u128);
+impl_decimal_ord!(f32);
+impl_decimal_ord!(f64);
