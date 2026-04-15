@@ -177,5 +177,3 @@ impl_decimal_ord!(u64);
 impl_decimal_ord!(u128);
 impl_decimal_ord!(f32);
 impl_decimal_ord!(f64);
-
-fn ff() {}
