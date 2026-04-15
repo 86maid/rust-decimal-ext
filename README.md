@@ -15,9 +15,9 @@
 ```rust
 use rust_decimal::prelude::*;
 
-let mut a = Decimal::from(1) + 1;
-let mut b = Decimal::from(2) + 0.5;
-let mut c = Decimal::from(5) + "0.5";
+let mut a: Decimal = Decimal::from(1) + 1;
+let mut b: Decimal = Decimal::from(2) + 0.5;
+let mut c: Decimal = Decimal::from(5) + "0.5";
 
 a += 1;
 b += 0.5;
