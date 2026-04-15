@@ -74,10 +74,10 @@ wasm-bindgen-test = { version = "0.3" }
 [target.'cfg(not(target_arch = "wasm32"))'.dev-dependencies]
 bincode = { default-features = false, version = "1.0" }
 bytes = { default-features = false, version = "1.0" }
-diesel = { default-features = false, features = [
-    "mysql",
-    "postgres",
-], version = "2.2.3" }
+# diesel = { default-features = false, features = [
+#     "mysql",
+#     "postgres",
+# ], version = "2.2.3" }
 futures = { default-features = false, version = "0.3" }
 postgres = { default-features = false, version = "0.19" }
 rand = { default-features = false, features = ["getrandom"], version = "0.8" }
