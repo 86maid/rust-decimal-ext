@@ -2,6 +2,7 @@ use crate::Decimal;
 use crate::Error;
 use overload::overload;
 use std::cmp::Ordering;
+use std::ops;
 
 #[rustfmt::skip]
 macro_rules! impl_try_from_primitive {
