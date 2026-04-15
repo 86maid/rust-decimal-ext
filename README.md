@@ -1,12 +1,10 @@
 # rust_decimal_ext &emsp; [![Latest Version]][crates.io] [![Docs Badge]][docs]
 
-[actions]: https://actions-badge.atrox.dev/paupino/rust-decimal/goto
+[Latest Version]: https://img.shields.io/crates/v/rust_decimal_ext.svg
 
-[Latest Version]: https://img.shields.io/crates/v/rust-decimal.svg
+[crates.io]: https://crates.io/crates/rust_decimal_ext
 
-[crates.io]: https://crates.io/crates/rust-decimal-ext
-
-[Docs Badge]: https://docs.rs/rust_decimal/badge.svg
+[Docs Badge]: https://docs.rs/rust_decimal_ext/badge.svg
 
 [docs]: https://docs.rs/rust_decimal_ext
 
