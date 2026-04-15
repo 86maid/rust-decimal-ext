@@ -12,7 +12,10 @@ name = "rust_decimal_ext"
 readme = "./README.md"
 repository = "https://github.com/86maid/rust-decimal-ext"
 rust-version = "1.60"
-version = "1.36.1"
+version = "1.41.0"
+
+[lib]
+name = "rust_decimal"
 
 [package.metadata.docs.rs]
 all-features = true
@@ -29,7 +32,7 @@ bytes = { default-features = false, optional = true, version = "1.0" }
 diesel = { default-features = false, optional = true, version = "2.2.3" }
 ndarray = { default-features = false, optional = true, version = "0.15.6" }
 num-traits = { default-features = false, features = ["i128"], version = "0.2" }
-overload = "0.1.1"
+overload = { path = "./overload" }
 postgres-types = { default-features = false, optional = true, version = "0.2" }
 proptest = { default-features = false, optional = true, features = [
     "std",

@@ -2,7 +2,6 @@ use crate::Decimal;
 use crate::Error;
 use overload::overload;
 use std::cmp::Ordering;
-use std::ops;
 
 #[rustfmt::skip]
 macro_rules! impl_try_from_primitive {
@@ -42,7 +41,6 @@ macro_rules! overload_all_op {
 }
 
 overload_all_op!(Decimal, &str);
-overload_all_op!(Decimal, &String);
 overload_all_op!(Decimal, String);
 overload_all_op!(Decimal, isize);
 overload_all_op!(Decimal, i8);
@@ -59,9 +57,28 @@ overload_all_op!(Decimal, u128);
 overload_all_op!(Decimal, f32);
 overload_all_op!(Decimal, f64);
 
+// oh shit! stack overflow!
+// overload_all_op!(&str, Decimal);
+// overload_all_op!(String, Decimal);
+overload_all_op!(isize, Decimal);
+overload_all_op!(i8, Decimal);
+overload_all_op!(i16, Decimal);
+overload_all_op!(i32, Decimal);
+overload_all_op!(i64, Decimal);
+overload_all_op!(i128, Decimal);
+overload_all_op!(usize, Decimal);
+overload_all_op!(u8, Decimal);
+overload_all_op!(u16, Decimal);
+overload_all_op!(u32, Decimal);
+overload_all_op!(u64, Decimal);
+overload_all_op!(u128, Decimal);
+overload_all_op!(f32, Decimal);
+overload_all_op!(f64, Decimal);
+
 macro_rules! impl_decimal_eq {
     ($type:ty) => {
         impl PartialEq<$type> for Decimal {
+            #[track_caller]
             fn eq(&self, other: &$type) -> bool {
                 *self == Decimal::try_from(*other).unwrap()
             }
@@ -70,24 +87,28 @@ macro_rules! impl_decimal_eq {
 }
 
 impl PartialEq<str> for Decimal {
+    #[track_caller]
     fn eq(&self, other: &str) -> bool {
         *self == Decimal::try_from(other).unwrap()
     }
 }
 
 impl PartialEq<&str> for Decimal {
+    #[track_caller]
     fn eq(&self, other: &&str) -> bool {
         *self == Decimal::try_from(*other).unwrap()
     }
 }
 
 impl PartialEq<String> for Decimal {
+    #[track_caller]
     fn eq(&self, other: &String) -> bool {
         *self == Decimal::try_from(other).unwrap()
     }
 }
 
 impl PartialEq<&String> for Decimal {
+    #[track_caller]
     fn eq(&self, other: &&String) -> bool {
         *self == Decimal::try_from(*other).unwrap()
     }
@@ -112,7 +133,7 @@ macro_rules! impl_decimal_ord {
     ($type:ty) => {
         impl PartialOrd<$type> for Decimal {
             fn partial_cmp(&self, other: &$type) -> Option<Ordering> {
-                self.partial_cmp(&Decimal::try_from(*other).unwrap())
+                self.partial_cmp(&Decimal::try_from(*other).ok()?)
             }
         }
     };
@@ -120,25 +141,25 @@ macro_rules! impl_decimal_ord {
 
 impl PartialOrd<str> for Decimal {
     fn partial_cmp(&self, other: &str) -> Option<core::cmp::Ordering> {
-        self.partial_cmp(&Decimal::try_from(other).unwrap())
+        self.partial_cmp(&Decimal::try_from(other).ok()?)
     }
 }
 
 impl PartialOrd<&str> for Decimal {
     fn partial_cmp(&self, other: &&str) -> Option<core::cmp::Ordering> {
-        self.partial_cmp(&Decimal::try_from(*other).unwrap())
+        self.partial_cmp(&Decimal::try_from(*other).ok()?)
     }
 }
 
 impl PartialOrd<String> for Decimal {
     fn partial_cmp(&self, other: &String) -> Option<core::cmp::Ordering> {
-        self.partial_cmp(&Decimal::try_from(other).unwrap())
+        self.partial_cmp(&Decimal::try_from(other).ok()?)
     }
 }
 
 impl PartialOrd<&String> for Decimal {
     fn partial_cmp(&self, other: &&String) -> Option<core::cmp::Ordering> {
-        self.partial_cmp(&Decimal::try_from(*other).unwrap())
+        self.partial_cmp(&Decimal::try_from(*other).ok()?)
     }
 }
 

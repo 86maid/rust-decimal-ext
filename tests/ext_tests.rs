@@ -1,6 +1,8 @@
+use std::ops::AddAssign;
+
 #[test]
 fn test_overload() {
-    use rust_decimal_ext::prelude::*;
+    use rust_decimal::prelude::*;
 
     let mut a: Decimal = Decimal::from(1) + 1;
     let mut b = Decimal::from(1) + 2.5;
