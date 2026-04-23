@@ -116,6 +116,7 @@ macro_rules! forward_ref_val_binop {
         impl<'a> $imp<$res> for &'a $res {
             type Output = $res;
 
+            #[track_caller]
             #[inline]
             fn $method(self, other: $res) -> $res {
                 self.$method(&other)
@@ -129,6 +130,7 @@ macro_rules! forward_val_ref_binop {
         impl<'a> $imp<&'a $res> for $res {
             type Output = $res;
 
+            #[track_caller]
             #[inline]
             fn $method(self, other: &$res) -> $res {
                 (&self).$method(other)
@@ -142,6 +144,7 @@ macro_rules! forward_val_val_binop {
         impl $imp<$res> for $res {
             type Output = $res;
 
+            #[track_caller]
             #[inline]
             fn $method(self, other: $res) -> $res {
                 (&self).$method(&other)
@@ -154,6 +157,7 @@ forward_all_binop!(impl Add for Decimal, add);
 impl<'a, 'b> Add<&'b Decimal> for &'a Decimal {
     type Output = Decimal;
 
+    #[track_caller]
     #[inline(always)]
     fn add(self, other: &Decimal) -> Decimal {
         match ops::add_impl(self, other) {
@@ -211,6 +215,7 @@ forward_all_binop!(impl Div for Decimal, div);
 impl<'a, 'b> Div<&'b Decimal> for &'a Decimal {
     type Output = Decimal;
 
+    #[track_caller]
     #[inline]
     fn div(self, other: &Decimal) -> Decimal {
         match ops::div_impl(self, other) {
@@ -225,6 +230,7 @@ forward_all_binop!(impl Mul for Decimal, mul);
 impl<'a, 'b> Mul<&'b Decimal> for &'a Decimal {
     type Output = Decimal;
 
+    #[track_caller]
     #[inline]
     fn mul(self, other: &Decimal) -> Decimal {
         match ops::mul_impl(self, other) {
@@ -238,6 +244,7 @@ forward_all_binop!(impl Rem for Decimal, rem);
 impl<'a, 'b> Rem<&'b Decimal> for &'a Decimal {
     type Output = Decimal;
 
+    #[track_caller]
     #[inline]
     fn rem(self, other: &Decimal) -> Decimal {
         match ops::rem_impl(self, other) {
@@ -252,6 +259,7 @@ forward_all_binop!(impl Sub for Decimal, sub);
 impl<'a, 'b> Sub<&'b Decimal> for &'a Decimal {
     type Output = Decimal;
 
+    #[track_caller]
     #[inline(always)]
     fn sub(self, other: &Decimal) -> Decimal {
         match ops::sub_impl(self, other) {

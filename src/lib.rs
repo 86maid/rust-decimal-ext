@@ -71,6 +71,7 @@ pub mod prelude {
     pub use num_traits::{FromPrimitive, One, Signed, ToPrimitive, Zero};
     // #[cfg(feature = "macros")]
     // pub use rust_decimal_macros::dec;
+    pub use overload::*;
 }
 
 #[cfg(feature = "diesel")]
@@ -82,3 +83,5 @@ pub type Result<T> = core::result::Result<T, Error>;
 
 // #[cfg(feature = "legacy-ops")]
 // compiler_error!("legacy-ops has been removed as 1.x");
+
+pub use overload;
