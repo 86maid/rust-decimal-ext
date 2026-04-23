@@ -2,7 +2,6 @@ use crate::Decimal;
 use crate::Error;
 use overload::overload;
 use std::cmp::Ordering;
-use std::ops;
 
 #[rustfmt::skip]
 macro_rules! impl_try_from_primitive {
@@ -26,7 +25,7 @@ macro_rules! impl_try_from_primitive {
 impl_try_from_primitive!(String, core::str::FromStr::from_str);
 impl_try_from_primitive!(&String, core::str::FromStr::from_str);
 
-macro_rules! overload_all_op {
+macro_rules! overload_all_op_right {
     ($a:ty, $b:ty) => {
       overload!((a: ?$a) + (b: $b) -> Decimal { a + Decimal::try_from(b).unwrap() });
       overload!((a: ?$a) - (b: $b) -> Decimal { a - Decimal::try_from(b).unwrap() });
@@ -41,40 +40,72 @@ macro_rules! overload_all_op {
     };
 }
 
-overload_all_op!(Decimal, &str);
-overload_all_op!(Decimal, String);
-overload_all_op!(Decimal, isize);
-overload_all_op!(Decimal, i8);
-overload_all_op!(Decimal, i16);
-overload_all_op!(Decimal, i32);
-overload_all_op!(Decimal, i64);
-overload_all_op!(Decimal, i128);
-overload_all_op!(Decimal, usize);
-overload_all_op!(Decimal, u8);
-overload_all_op!(Decimal, u16);
-overload_all_op!(Decimal, u32);
-overload_all_op!(Decimal, u64);
-overload_all_op!(Decimal, u128);
-overload_all_op!(Decimal, f32);
-overload_all_op!(Decimal, f64);
+macro_rules! overload_all_op_left {
+    ($a:ty, $b:ty) => {
+        overload!((a: $a) + (b: ?$b) -> Decimal { Decimal::try_from(a).unwrap() + b });
+        overload!((a: $a) - (b: ?$b) -> Decimal { Decimal::try_from(a).unwrap() - b });
+        overload!((a: $a) * (b: ?$b) -> Decimal { Decimal::try_from(a).unwrap() * b });
+        overload!((a: $a) / (b: ?$b) -> Decimal { Decimal::try_from(a).unwrap() / b });
+        overload!((a: $a) % (b: ?$b) -> Decimal { Decimal::try_from(a).unwrap() % b });
+        overload!((a: &mut $a) += (b: $b) {
+            *a = (*a + b).try_into().unwrap()
+        });
+        overload!((a: &mut $a) -= (b: $b) {
+            *a = (*a - b).try_into().unwrap()
+        });
+        overload!((a: &mut $a) *= (b: $b) {
+            *a = (*a * b).try_into().unwrap()
+        });
+        overload!((a: &mut $a) /= (b: $b) {
+            *a = (*a / b).try_into().unwrap()
+        });
+        overload!((a: &mut $a) %= (b: $b) {
+            *a = (*a % b).try_into().unwrap()
+        });
+    };
+}
 
-// oh shit! stack overflow!
-// overload_all_op!(&str, Decimal);
-// overload_all_op!(String, Decimal);
-overload_all_op!(isize, Decimal);
-overload_all_op!(i8, Decimal);
-overload_all_op!(i16, Decimal);
-overload_all_op!(i32, Decimal);
-overload_all_op!(i64, Decimal);
-overload_all_op!(i128, Decimal);
-overload_all_op!(usize, Decimal);
-overload_all_op!(u8, Decimal);
-overload_all_op!(u16, Decimal);
-overload_all_op!(u32, Decimal);
-overload_all_op!(u64, Decimal);
-overload_all_op!(u128, Decimal);
-overload_all_op!(f32, Decimal);
-overload_all_op!(f64, Decimal);
+overload_all_op_right!(Decimal, &str);
+overload_all_op_right!(Decimal, String);
+overload_all_op_right!(Decimal, isize);
+overload_all_op_right!(Decimal, i8);
+overload_all_op_right!(Decimal, i16);
+overload_all_op_right!(Decimal, i32);
+overload_all_op_right!(Decimal, i64);
+overload_all_op_right!(Decimal, i128);
+overload_all_op_right!(Decimal, usize);
+overload_all_op_right!(Decimal, u8);
+overload_all_op_right!(Decimal, u16);
+overload_all_op_right!(Decimal, u32);
+overload_all_op_right!(Decimal, u64);
+overload_all_op_right!(Decimal, u128);
+overload_all_op_right!(Decimal, f32);
+overload_all_op_right!(Decimal, f64);
+
+overload!((a: &str) + (b: ?Decimal) -> Decimal { Decimal::try_from(a).unwrap() + b });
+overload!((a: &str) - (b: ?Decimal) -> Decimal { Decimal::try_from(a).unwrap() - b });
+overload!((a: &str) * (b: ?Decimal) -> Decimal { Decimal::try_from(a).unwrap() * b });
+overload!((a: &str) / (b: ?Decimal) -> Decimal { Decimal::try_from(a).unwrap() / b });
+overload!((a: &str) % (b: ?Decimal) -> Decimal { Decimal::try_from(a).unwrap() % b });
+overload!((a: String) + (b: ?Decimal) -> Decimal { Decimal::try_from(a).unwrap() + b });
+overload!((a: String) - (b: ?Decimal) -> Decimal { Decimal::try_from(a).unwrap() - b });
+overload!((a: String) * (b: ?Decimal) -> Decimal { Decimal::try_from(a).unwrap() * b });
+overload!((a: String) / (b: ?Decimal) -> Decimal { Decimal::try_from(a).unwrap() / b });
+overload!((a: String) % (b: ?Decimal) -> Decimal { Decimal::try_from(a).unwrap() % b });
+overload_all_op_left!(isize, Decimal);
+overload_all_op_left!(i8, Decimal);
+overload_all_op_left!(i16, Decimal);
+overload_all_op_left!(i32, Decimal);
+overload_all_op_left!(i64, Decimal);
+overload_all_op_left!(i128, Decimal);
+overload_all_op_left!(usize, Decimal);
+overload_all_op_left!(u8, Decimal);
+overload_all_op_left!(u16, Decimal);
+overload_all_op_left!(u32, Decimal);
+overload_all_op_left!(u64, Decimal);
+overload_all_op_left!(u128, Decimal);
+overload_all_op_left!(f32, Decimal);
+overload_all_op_left!(f64, Decimal);
 
 macro_rules! impl_decimal_eq {
     ($type:ty) => {
@@ -82,6 +113,13 @@ macro_rules! impl_decimal_eq {
             #[track_caller]
             fn eq(&self, other: &$type) -> bool {
                 *self == Decimal::try_from(*other).unwrap()
+            }
+        }
+
+        impl PartialEq<Decimal> for $type {
+            #[track_caller]
+            fn eq(&self, other: &Decimal) -> bool {
+                *other == *self
             }
         }
     };
@@ -115,6 +153,34 @@ impl PartialEq<&String> for Decimal {
     }
 }
 
+impl PartialEq<Decimal> for str {
+    #[track_caller]
+    fn eq(&self, other: &Decimal) -> bool {
+        *other == *self
+    }
+}
+
+impl PartialEq<Decimal> for &str {
+    #[track_caller]
+    fn eq(&self, other: &Decimal) -> bool {
+        *other == *self
+    }
+}
+
+impl PartialEq<Decimal> for String {
+    #[track_caller]
+    fn eq(&self, other: &Decimal) -> bool {
+        *other == *self
+    }
+}
+
+impl PartialEq<Decimal> for &String {
+    #[track_caller]
+    fn eq(&self, other: &Decimal) -> bool {
+        *other == *self
+    }
+}
+
 impl_decimal_eq!(isize);
 impl_decimal_eq!(i8);
 impl_decimal_eq!(i16);
@@ -135,6 +201,12 @@ macro_rules! impl_decimal_ord {
         impl PartialOrd<$type> for Decimal {
             fn partial_cmp(&self, other: &$type) -> Option<Ordering> {
                 self.partial_cmp(&Decimal::try_from(*other).ok()?)
+            }
+        }
+
+        impl PartialOrd<Decimal> for $type {
+            fn partial_cmp(&self, other: &Decimal) -> Option<Ordering> {
+                Decimal::try_from(*self).ok()?.partial_cmp(other)
             }
         }
     };
@@ -161,6 +233,30 @@ impl PartialOrd<String> for Decimal {
 impl PartialOrd<&String> for Decimal {
     fn partial_cmp(&self, other: &&String) -> Option<core::cmp::Ordering> {
         self.partial_cmp(&Decimal::try_from(*other).ok()?)
+    }
+}
+
+impl PartialOrd<Decimal> for str {
+    fn partial_cmp(&self, other: &Decimal) -> Option<core::cmp::Ordering> {
+        other.partial_cmp(self)
+    }
+}
+
+impl PartialOrd<Decimal> for &str {
+    fn partial_cmp(&self, other: &Decimal) -> Option<core::cmp::Ordering> {
+        other.partial_cmp(self)
+    }
+}
+
+impl PartialOrd<Decimal> for String {
+    fn partial_cmp(&self, other: &Decimal) -> Option<core::cmp::Ordering> {
+        other.partial_cmp(self)
+    }
+}
+
+impl PartialOrd<Decimal> for &String {
+    fn partial_cmp(&self, other: &Decimal) -> Option<core::cmp::Ordering> {
+        other.partial_cmp(self)
     }
 }
 

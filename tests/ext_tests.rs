@@ -27,6 +27,20 @@ fn test_overload() {
     assert!(a.partial_cmp(&f64::NAN).is_none());
     assert!(a.partial_cmp(&f64::INFINITY).is_none());
     assert!(a.partial_cmp(&f64::NEG_INFINITY).is_none());
+    assert!(1 == Decimal::from(1));
+    assert!(Decimal::from(1) == 1);
+    assert!(1 + Decimal::from(1) == 2);
+    assert!("1" + Decimal::from(1) == Decimal::from(2));
+    assert!("1" == Decimal::from(1));
+    assert!("1".partial_cmp(&Decimal::from(1)).unwrap().is_eq());
+
+    let mut z = 1;
+    z += Decimal::from(1);
+    assert!(z == 2);
+
+    let mut z = Decimal::from(1);
+    z += 1;
+    assert!(z == 2);
 
     // panic
     _ = Decimal::from(1) + f64::NAN;
